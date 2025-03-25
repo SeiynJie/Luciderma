@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 
 const Doctors = () => {
   const { speciality } = useParams();
   const { doctors } = useContext(AppContext);
   const [filterDoc, setFilterDoc] = useState([]);
+
+  const navigate = useNavigate(); // So the user can navigate to the appointment page on click of the items
 
   const applyFilter = () => {
     if (speciality) {
@@ -21,17 +23,62 @@ const Doctors = () => {
   }, [doctors, speciality]);
   return (
     <div>
-      <p>Browse through the doctors speciality</p>
-      <div>
-        <div>
-          <p>Therapist</p>
-          <p>Cosmetic Dermatologist </p>
-          <p>Dermatologist</p>
-          <p>Pediatricians</p>
-          <p>Aesthetician</p>
+      <p className="text-gray-600">Browse through the doctors speciality</p>
+      <div className="mt-5 flex flex-col items-start gap-5 sm:flex-row">
+        <div className="flex flex-col gap-4 text-sm text-gray-600">
+          <p
+            onClick={() =>
+              speciality === "Therapist"
+                ? navigate("/doctors")
+                : navigate("/doctors/Therapist")
+            }
+            className={`w-[94vw] cursor-pointer rounded border border-gray-300 py-1.5 pr-16 pl-3 transition-all hover:scale-105 sm:w-auto ${speciality === "Therapist" ? "bg-indigo-100 text-black" : ""} ? "bg-indigo-100 text-black" : ""}`}
+          >
+            Therapist
+          </p>
+          <p
+            onClick={() =>
+              speciality === "Cosmetic Dermatologist"
+                ? navigate("/doctors")
+                : navigate("/doctors/Cosmetic Dermatologist")
+            }
+            className={`w-[94vw] cursor-pointer rounded border border-gray-300 py-1.5 pr-16 pl-3 transition-all hover:scale-105 sm:w-auto ${speciality === "Cosmetic Dermatologist" ? "bg-indigo-100 text-black" : ""}}`}
+          >
+            Cosmetic Dermatologist{" "}
+          </p>
+          <p
+            onClick={() =>
+              speciality === "Dermatologist"
+                ? navigate("/doctors")
+                : navigate("/doctors/Dermatologist")
+            }
+            className={`w-[94vw] cursor-pointer rounded border border-gray-300 py-1.5 pr-16 pl-3 transition-all hover:scale-105 sm:w-auto ${speciality === "Dermatologist" ? "bg-indigo-100 text-black" : ""}}`}
+          >
+            Dermatologist
+          </p>
+          <p
+            onClick={() =>
+              speciality === "Pediatrician"
+                ? navigate("/doctors")
+                : navigate("/doctors/Pediatrician")
+            }
+            className={`w-[94vw] cursor-pointer rounded border border-gray-300 py-1.5 pr-16 pl-3 transition-all hover:scale-105 sm:w-auto ${speciality === "Pediatrician" ? "bg-indigo-100 text-black" : ""}}`}
+          >
+            Pediatrician
+          </p>
+          <p
+            onClick={() =>
+              speciality === "Aesthetician"
+                ? navigate("/doctors")
+                : navigate("/doctors/Aesthetician")
+            }
+            className={`w-[94vw] cursor-pointer rounded border border-gray-300 py-1.5 pr-16 pl-3 transition-all hover:scale-105 sm:w-auto ${speciality === "Aesthetician" ? "bg-indigo-100 text-black" : ""}}`}
+          >
+            Aesthetician
+          </p>
         </div>
 
-        <div>
+        <div className="grid w-full grid-cols-5 gap-4 gap-y-6">
           {filterDoc.map((item, index) => {
             return (
               <div
