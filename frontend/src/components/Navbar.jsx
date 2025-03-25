@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [showMenu, setShowMenu] = useState(false);
+
+  //   When no token = logged out
+  const [token, setToken] = useState(true);
+
   return (
     <div className="mb-5 flex items-center justify-between border-b border-b-gray-400 py-4 text-sm">
       <img src={assets.logo} alt="logo" className="w-44 cursor-pointer" />
@@ -28,12 +33,36 @@ const Navbar = () => {
       </ul>
 
       <div className="flex items-center gap-4">
-        <button
-          onClick={() => navigate("/login")}
-          className="bg-primary hidden rounded-full px-8 py-3 font-medium text-white md:block"
-        >
-          Create Account
-        </button>
+        {token ? (
+          <div className="group relative flex cursor-pointer items-center gap-2">
+            <img
+              className="w-8 rounded-full"
+              src={assets.profile_pic}
+              alt="profile picture"
+            />
+            <img
+              className="w-2.5"
+              src={assets.dropdown_icon}
+              alt="dropdown icon"
+            />
+
+            {/* Dropdown */}
+            <div className="absolute top-0 right-0 z-20 hidden pt-14 text-base font-medium text-gray-600 group-hover:block">
+              <div className="flex min-w-48 flex-col gap-4 rounded bg-stone-100 p-4">
+                <p onClick={() => navigate("/my-profile")} className="hover:text-black cursor-pointer">My Profile</p>
+                <p onClick={() => navigate("/my-appointments")} className="hover:text-black cursor-pointer">My Appointments</p>
+                <p onClick={() => setToken(false)} className="hover:text-black cursor-pointer">Logout</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => navigate("/login")}
+            className="bg-primary hidden rounded-full px-8 py-3 font-medium text-white md:block"
+          >
+            Create Account
+          </button>
+        )}
       </div>
     </div>
   );
