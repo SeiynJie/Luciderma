@@ -11,7 +11,12 @@ const Navbar = () => {
 
   return (
     <div className="mb-5 flex items-center justify-between border-b border-b-gray-400 py-4 text-sm">
-      <img src={assets.logo} alt="logo" className="w-44 cursor-pointer" />
+      <img
+        onClick={() => navigate("/")}
+        src={assets.logo}
+        alt="logo"
+        className="w-44 cursor-pointer"
+      />
 
       <ul className="hidden items-start gap-5 font-medium md:flex">
         <NavLink to="/">
@@ -49,9 +54,24 @@ const Navbar = () => {
             {/* Dropdown */}
             <div className="absolute top-0 right-0 z-20 hidden pt-14 text-base font-medium text-gray-600 group-hover:block">
               <div className="flex min-w-48 flex-col gap-4 rounded bg-stone-100 p-4">
-                <p onClick={() => navigate("/my-profile")} className="hover:text-black cursor-pointer">My Profile</p>
-                <p onClick={() => navigate("/my-appointments")} className="hover:text-black cursor-pointer">My Appointments</p>
-                <p onClick={() => setToken(false)} className="hover:text-black cursor-pointer">Logout</p>
+                <p
+                  onClick={() => navigate("/my-profile")}
+                  className="cursor-pointer hover:text-black"
+                >
+                  My Profile
+                </p>
+                <p
+                  onClick={() => navigate("/my-appointments")}
+                  className="cursor-pointer hover:text-black"
+                >
+                  My Appointments
+                </p>
+                <p
+                  onClick={() => setToken(false)}
+                  className="cursor-pointer hover:text-black"
+                >
+                  Logout
+                </p>
               </div>
             </div>
           </div>
