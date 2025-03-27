@@ -58,7 +58,7 @@ const Appointment = () => {
 
       // Create slots in intervals from current time. Ex: now is 8PM : 8:30, 9:00, etc.
       while (currentDate < endTime) {
-        let formattedTime = currentDate.toLocaleDateString([], {
+        let formattedTime = currentDate.toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         });
@@ -150,12 +150,22 @@ const Appointment = () => {
             {docSlots.length &&
               docSlots.map((item, index) => {
                 return (
-                  <div key={index} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? "bg-primary text-white" : "border border-gray-200"}`}>
+                  <div onClick={() => setSlotIndex(index)} key={index} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? "bg-primary text-white" : "border border-gray-200"}`}>
                     <p>{item[0] && daysOfWeek[item[0].datetime.getDay()]}</p>
                     <p>{item[0] && item[0].datetime.getDate()}</p>
                   </div>
                 );
               })}
+          </div>
+
+          <div>
+            {docSlots.length && docSlots[slotIndex].map((item, index)=>{
+              return(
+                <p key={index}>
+                  {item.time}
+                </p>
+              )
+            })}
           </div>
         </div>
       </div>
