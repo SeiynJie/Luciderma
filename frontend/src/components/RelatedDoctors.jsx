@@ -1,11 +1,22 @@
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
-const TopDoctors = () => {
-  const navigate = useNavigate();
+const RelatedDoctors = ({ docId, speciality }) => {
   const { doctors } = useContext(AppContext);
 
+  const [relDoc, setRelDocs] = useState([]);
+  const navigate = useNavigate();
+
+  //   Get other doctors with same speciality that isn't the current one
+  useEffect(() => {
+    if (doctors.length > 0 && speciality) {
+      const doctorsData = doctors.filter(
+        (doc) => doc.speciality === speciality && doc._id !== docId,
+      );
+      setRelDocs(doctorsData);
+    }
+  }, [doctors, speciality, docId]);
   return (
     <div className="my-16 flex flex-col items-center gap-4 text-gray-900 md:mx-10">
       <h1 className="text-3xl font-medium">Top Doctors</h1>
@@ -14,7 +25,7 @@ const TopDoctors = () => {
       </p>
 
       <div className="grid w-full grid-cols-5 gap-4 gap-y-6 px-3 pt-5 sm:px-0">
-        {doctors.slice(0, 10).map((item, index) => {
+        {relDoc.slice(0, 5).map((item, index) => {
           return (
             <div
               onClick={() => {
@@ -51,4 +62,4 @@ const TopDoctors = () => {
   );
 };
 
-export default TopDoctors;
+export default RelatedDoctors;
