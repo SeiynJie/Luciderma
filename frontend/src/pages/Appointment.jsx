@@ -16,14 +16,79 @@ const Appointment = () => {
   const fetchDocInfo = async () => {
     const docInfo = doctors.find((doc) => doc._id === docId);
     setDocInfo(docInfo);
+  };
 
-    console.log(docInfo);
+  // ? Booking slots section
+  const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const [docSlots, setDocSlots] = useState([]);
+  const [slotIndex, setSlotIndex] = useState(0);
+  const [slotTime, setSlotTime] = useState("");
+
+  const getAvailableSlots = async () => {
+    setDocSlots([]);
+
+    // Getting current date
+    let today = new Date();
+    for (let i = 0; i < 7; i++) {
+      // Getting date with index
+      let currentDate = new Date(today);
+      currentDate.setDate(today.getDate() + i);
+
+      // Setting end time of the date with index
+      let endTime = new Date();
+      endTime.setDate(today.getDate() + i);
+      endTime.setHours(20, 30, 0, 0); //* 8:30 PM | END TIME
+
+      const startingTime = 9; //* 9 AM | STARTING TIME
+      // Setting hours
+      if (today.getDate() === currentDate.getDate()) {
+        currentDate.setHours(
+          currentDate.getHours() > startingTime
+            ? currentDate.getHours() + 1
+            : startingTime,
+        );
+
+        currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
+      } else {
+        currentDate.setHours(startingTime);
+        currentDate.setMinutes(0);
+      }
+
+      let timeSlots = [];
+
+      // Create slots in intervals from current time. Ex: now is 8PM : 8:30, 9:00, etc.
+      while (currentDate < endTime) {
+        let formattedTime = currentDate.toLocaleDateString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        // add slot to array
+        timeSlots.push({
+          datetime: new Date(currentDate),
+          time: formattedTime,
+        });
+
+        // Increment time by 30 mins
+        currentDate.setMinutes(currentDate.getMinutes() + 30);
+      }
+
+      setDocSlots((prev) => [...prev, timeSlots]);
+    }
   };
 
   // Run every load if doctors array or docId changes
   useEffect(() => {
     fetchDocInfo();
   }, [doctors, docId]);
+
+  useEffect(() => {
+    getAvailableSlots();
+  }, [docInfo]);
+
+  useEffect(() => {
+    console.log(docSlots);
+  }, [docSlots]);
 
   // Only show IF docInfo is available (not null)
   return (
@@ -68,13 +133,29 @@ const Appointment = () => {
               </p>
             </div>
 
-            <p className="text-gray-500 font-medium mt-4">
+            <p className="mt-4 font-medium text-gray-500">
               Appointment fee:{" "}
               <span className="text-gray-600">
                 {currencySymbol}
                 {docInfo.fees}
               </span>
             </p>
+          </div>
+        </div>
+
+        {/* ------ Booking slots --------- */}
+        <div className="mt-4 font-medium text-gray-700 sm:ml-72 sm:pl-4">
+          <p>Booking Slots</p>
+          <div className="flex gap-3 items-center w-full overflow-x-scroll mt-4">
+            {docSlots.length &&
+              docSlots.map((item, index) => {
+                return (
+                  <div key={index} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? "bg-primary text-white" : "border border-gray-200"}`}>
+                    <p>{item[0] && daysOfWeek[item[0].datetime.getDay()]}</p>
+                    <p>{item[0] && item[0].datetime.getDate()}</p>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>
