@@ -34,6 +34,7 @@ const MyAppointments = () => {
                 </p>
               </div>
 
+              {/* Empty space to push buttons (on smaller viewports) */}
               <div></div>
 
               <div className="flex flex-col justify-end gap-2">
