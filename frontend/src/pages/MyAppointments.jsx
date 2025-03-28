@@ -14,7 +14,7 @@ const MyAppointments = () => {
           return (
             <div
               key={index}
-              className="grid-cols-[1fr_2fr} grid gap-4 border-b py-2 sm:flex sm:gap-6"
+              className="grid-cols-[1fr_2fr] grid gap-4 border-b py-2 sm:flex sm:gap-6"
             >
               <div>
                 <img src={item.image} alt="" className="w-32 bg-indigo-50" />
