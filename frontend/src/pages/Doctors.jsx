@@ -7,6 +7,9 @@ const Doctors = () => {
   const { doctors } = useContext(AppContext);
   const [filterDoc, setFilterDoc] = useState([]);
 
+  // For mobile responsiveness (show/hide filters menu)
+  const [showFilter, setShowFilter] = useState(false);
+
   const navigate = useNavigate(); // So the user can navigate to the appointment page on click of the items
 
   const applyFilter = () => {
@@ -25,7 +28,17 @@ const Doctors = () => {
     <div>
       <p className="text-gray-600">Browse through the doctors speciality</p>
       <div className="mt-5 flex flex-col items-start gap-5 sm:flex-row">
-        <div className="flex flex-col gap-4 text-sm text-gray-600">
+        <button
+          className={`rounded border border-gray-300 px-3 py-1 text-sm transition-all sm:hidden ${showFilter ? "bg-primary text-white" : ""}`}
+          onClick={() => {
+            setShowFilter((prev) => !prev);
+          }}
+        >
+          Filters
+        </button>
+        <div
+          className={`flex-col gap-4 text-sm text-gray-600 ${showFilter ? "flex" : "hidden sm:flex"}`}
+        >
           <p
             onClick={() =>
               speciality === "Therapist"
@@ -78,7 +91,7 @@ const Doctors = () => {
           </p>
         </div>
 
-        <div className="grid w-full grid-cols-5 gap-4 gap-y-6">
+        <div className="grid w-full auto-cols-auto md:grid-cols-3 lg:grid-cols-5 gap-4 gap-y-6">
           {filterDoc.map((item, index) => {
             return (
               <div
