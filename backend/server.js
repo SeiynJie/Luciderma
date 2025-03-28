@@ -12,7 +12,7 @@ app.use(cors())
 
 // API Endpoints 
 app.get("/", (request, response)=>{
-    response.send("API working Great")
+    response.send("API working Greatsz")
 })
 
 // Start express app
