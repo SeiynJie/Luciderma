@@ -4,7 +4,9 @@ export const AdminContext = createContext();
 
 // ? Context file that will update everything. Acts as a modular storage that also runs events on update
 const AdminContextProvider = (props) => {
-  const [aToken, setAToken] = useState("");
+  const [aToken, setAToken] = useState(
+    localStorage.getItem("aToken") ? localStorage.getItem("aToken") : ""
+  );
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const value = {
