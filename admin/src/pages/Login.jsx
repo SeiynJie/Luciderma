@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [state, setState] = useState("Admin");
@@ -30,6 +31,8 @@ const Login = () => {
                 localStorage.setItem("aToken", data.token)
                 
                 setAToken(data.token)
+            } else{
+                toast.error(data.message)
             }
         } else {
             // Doctor login API
