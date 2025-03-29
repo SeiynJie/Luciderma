@@ -2,6 +2,7 @@ import validator from "validator";
 import bycrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
+import jwt from "jsonwebtoken"
 
 // API for adding doctor
 const addDoctor = async (request, response) => {
@@ -75,34 +76,52 @@ const addDoctor = async (request, response) => {
     const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
       resource_type: "image",
     });
-    const imageUrl = imageUpload.secure_url
+    const imageUrl = imageUpload.secure_url;
 
     // Create doctor data to DB
     const doctorData = {
-        name,
-        email, 
-        image: imageUrl,
-        password: hashedPassword,
-        speciality,
-        degree,
-        experience,
-        about,
-        fees,
-        address: JSON.parse(address),
-        date: Date.now()
-    }
+      name,
+      email,
+      image: imageUrl,
+      password: hashedPassword,
+      speciality,
+      degree,
+      experience,
+      about,
+      fees,
+      address: JSON.parse(address),
+      date: Date.now(),
+    };
 
     // Store in database
-    const newDoctor = new doctorModel(doctorData)
-    await newDoctor.save()
+    const newDoctor = new doctorModel(doctorData);
+    await newDoctor.save();
 
     // Response
-    response.json({success: true, message: "Doctor added"})
-} catch (error) {
+    response.json({ success: true, message: "Doctor added" });
+  } catch (error) {
     console.log(error);
-    
-    response.json({success: false, message: error.message})
+    response.json({ success: false, message: error.message });
   }
 };
 
-export { addDoctor };
+//* API for Admin Login
+const loginAdmin = async (request, response) => {
+  try {
+    // Get email ID and Password
+    const { email, password } = request.body;
+
+    // Check if they match the .env
+    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+        const token = jwt.sign(email+password, process.env.JWT_SECRET)
+        response.json({success:true, token})
+    } else{
+        response.json({success: false, message: "Invalid credentials"})
+    }
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+
+export { addDoctor, loginAdmin };
