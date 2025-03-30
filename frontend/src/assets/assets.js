@@ -114,12 +114,12 @@ export const doctors = [
     },
     {
         _id: 'doc3',
-        name: 'Dr. Sarah Patel',
+        name: 'Dr. Raj Abdullah',
         image: doc3,
         speciality: 'Dermatologist',
         degree: 'MBBS',
         experience: '1 Years',
-        about: 'Dr. Sarah Patel is a dedicated dermatologist with a keen eye for skin health, providing advanced treatments for various skin conditions.',
+        about: 'Dr. Raj Abdullah is a dedicated dermatologist with a keen eye for skin health, providing advanced treatments for various skin conditions.',
         fees: 30,
         address: {
             line1: '37th Cross, Richmond',
