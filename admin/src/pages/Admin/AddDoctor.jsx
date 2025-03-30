@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { assets } from "../../assets/assets";
+import { AdminContext } from "../../context/AdminContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const AddDoctor = () => {
   const [docImg, setDocImg] = useState(false);
@@ -14,8 +17,74 @@ const AddDoctor = () => {
   const [address2, setAddress2] = useState("");
   const [about, setAbout] = useState("");
 
+  const { backendUrl, aToken } = useContext(AdminContext);
+  //* To submit add doctor to database
+  const onSubmitHandler = async (event) => {
+    event.preventDefault(); // To not reload page on submit of form
+
+    // Call API
+    try {
+      if (!docImg) {
+        return toast.error("Please add doctor image");
+      }
+
+      const formData = new FormData();
+      formData.append("image", docImg); // Should be same with the `multer.js`
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("experience", experience);
+      formData.append("fees", Number(fees)); // convert
+      formData.append("about", about);
+      formData.append("speciality", speciality);
+      formData.append("degree", degree);
+      formData.append(
+        "address",
+        JSON.stringify({ line1: address1, line2: address2 })
+      );
+
+      // Log form data
+      // formData.forEach((value, key) => {
+      //   console.log(`${key} : ${value}`)
+      // })
+
+      // Save to DB
+      const { data } = await axios.post(
+        backendUrl + "/api/admin/add-doctor",
+        formData,
+        {
+          headers: {
+            atoken: aToken,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+
+        //* Reset data
+        setDocImg(false);
+        setName("");
+        setEmail("");
+        setPassword("");
+        setExperience("1 Year");
+        setFees(0);
+        setSpeciality("Dermatologist");
+        setDegree("");
+        setAddress1("");
+        setAddress2("");
+        setAbout("");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      return toast.error(error.message);
+      console.log(error);
+    }
+  };
+
   return (
-    <form className="m-5 w-full">
+    <form onSubmit={onSubmitHandler} className="m-5 w-full">
       <p className="mb-3 text-lg font-medium">Add Doctor</p>
 
       <div className="bg-white px-8 py-8 border rounded w-full max-w-4xl max-h-[80vh] overflow-y-scroll border-gray-200">
@@ -85,7 +154,7 @@ const AddDoctor = () => {
                 className="border rounded px-3 py-2 border-gray-200"
                 name=""
                 id=""
-                >
+              >
                 <option value="1 Year">1 Year</option>
                 <option value="2 Years">2 Years</option>
                 <option value="3 Years">3 Years</option>
@@ -121,7 +190,7 @@ const AddDoctor = () => {
                 className="border rounded px-3 py-2 border-gray-200"
                 name=""
                 id=""
-                >
+              >
                 <option value="Dermatologist">Dermatologist</option>
                 <option value="Cosmetic Dermatologist">
                   Cosmetic Dermatologist
@@ -141,7 +210,7 @@ const AddDoctor = () => {
                 type="text"
                 placeholder="Education"
                 required
-                />
+              />
             </div>
 
             <div className="flex-1 flex flex-col gap-1">
@@ -156,12 +225,12 @@ const AddDoctor = () => {
               />
               <input
                 onChange={(e) => setAddress2(e.target.value)}
-                value={setAddress2}
+                value={address2}
                 className="border rounded px-3 py-2 border-gray-200"
                 type="text"
                 placeholder="Address 2"
                 required
-                />
+              />
             </div>
           </div>
         </div>
