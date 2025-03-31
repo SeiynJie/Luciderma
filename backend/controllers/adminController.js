@@ -2,7 +2,7 @@ import validator from "validator";
 import bycrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 // API for adding doctor
 const addDoctor = async (request, response) => {
@@ -112,11 +112,14 @@ const loginAdmin = async (request, response) => {
     const { email, password } = request.body;
 
     // Check if they match the .env
-    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-        const token = jwt.sign(email+password, process.env.JWT_SECRET)
-        response.json({success:true, token})
-    } else{
-        response.json({success: false, message: "Invalid credentials"})
+    if (
+      email === process.env.ADMIN_EMAIL &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      const token = jwt.sign(email + password, process.env.JWT_SECRET);
+      response.json({ success: true, token });
+    } else {
+      response.json({ success: false, message: "Invalid credentials" });
     }
   } catch (error) {
     console.log(error);
@@ -124,4 +127,18 @@ const loginAdmin = async (request, response) => {
   }
 };
 
-export { addDoctor, loginAdmin };
+// * API to get ALL Doctors List for admin panel
+
+const allDoctors = async (request, response) => {
+  try {
+    // Get doctors from mongo DB model but exclude the password
+    const doctors = await doctorModel.find({}).select("-password");
+    response.json({ success: true, doctors });
+
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+
+export { addDoctor, loginAdmin, allDoctors };
