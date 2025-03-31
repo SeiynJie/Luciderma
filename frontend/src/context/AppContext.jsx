@@ -15,6 +15,9 @@ const AppContextProvider = (props) => {
   // Call API to get doctorsData
   const [doctors, setDoctors] = useState([]);
 
+  // User auth token (login)
+  const [token, setToken] = useState("");
+
   const getDoctorsData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/doctor/list");
@@ -32,6 +35,9 @@ const AppContextProvider = (props) => {
   const value = {
     doctors,
     currencySymbol,
+    token,
+    setToken,
+    backendUrl,
   };
 
   useEffect(() => {

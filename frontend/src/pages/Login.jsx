@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [state, setState] = useState("Sign Up");
@@ -7,13 +10,49 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
+  const { backendUrl, token, setToken } = useContext(AppContext);
+
   const onSubmitHandler = async (event) => {
     event.preventDefault(); // Will not reload webpage when form submitted
+
+    try {
+      if (state === "Sign Up") {
+        //* Register
+        const { data } = await axios.post(backendUrl + "/api/user/register", {
+          name,
+          password,
+          email,
+        });
+
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        //* Login
+        const { data } = await axios.post(backendUrl + "/api/user/login", {
+          password,
+          email,
+        });
+
+        if (data.success) {
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message)
+
+    }
   };
-  
+
   return (
-    <form className="flex min-h-[80vh] items-center">
-      <div className="m-auto flex min-w-[340px] flex-col items-start gap-3 rounded-xl border p-8 text-sm text-zinc-600 shadow-lg sm:min-w-96">
+    <form className="flex min-h-[80vh] items-center" onSubmit={onSubmitHandler}>
+      <div className="m-auto flex min-w-[340px] flex-col items-start gap-3 rounded-xl border border-gray-200 p-8 text-sm text-zinc-600 shadow-lg sm:min-w-96">
         <p className="text-2xl font-semibold">
           {state === "Sign Up" ? "Create Account" : "Login"}
         </p>
@@ -55,7 +94,7 @@ const Login = () => {
           />
         </div>
 
-        <button className="bg-primary w-full rounded-md py-2 text-base text-white">
+        <button type="submit" className="bg-primary w-full rounded-md py-2 text-base text-white">
           {state === "Sign Up" ? "Create Account" : "Login"}
         </button>
 
