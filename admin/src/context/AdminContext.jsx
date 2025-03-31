@@ -43,7 +43,7 @@ const AdminContextProvider = (props) => {
       // Call API
       const { data } = await axios.post(
         backendUrl + "/api/admin/change-availability",
-        docId,
+        { docId },
         {
           headers: {
             aToken,
@@ -67,7 +67,7 @@ const AdminContextProvider = (props) => {
     backendUrl,
     doctors,
     getAllDoctors,
-    changeAvailability
+    changeAvailability,
   };
 
   return (
