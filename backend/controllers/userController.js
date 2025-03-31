@@ -57,4 +57,33 @@ const registerUser = async (request, response) => {
   }
 };
 
-export { registerUser };
+//* User Login API
+const loginUser = async (request, response) => {
+  try {
+    // Get email and password from user's request
+    const { email, password } = request.body;
+
+    const user = await userModel.findOne({ email });
+
+    // Check if user exists with the email ID
+    if (!user) {
+      return response.json({ success: false, message: "User does not exist" });
+    }
+
+    // Match password
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch) {
+      // Send token to user
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      response.json({ success: true, token });
+    } else {
+      response.json({ success: false, message: "Incorrect Password" });
+    }
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+
+export { registerUser, loginUser };
