@@ -16,7 +16,9 @@ const AppContextProvider = (props) => {
   const [doctors, setDoctors] = useState([]);
 
   // User auth token (login)
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("token"))
+    ? useState(localStorage.getItem("token"))
+    : useState(false);
 
   const getDoctorsData = async () => {
     try {
