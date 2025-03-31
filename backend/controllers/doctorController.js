@@ -30,4 +30,4 @@ const doctorList = async (request, response) => {
     response.json({ success: false, message: error });
   }
 };
-export { changeAvailability };
+export { changeAvailability, doctorList };
