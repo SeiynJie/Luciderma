@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
 
   //   When no token = logged out
-  const [token, setToken] = useState(true);
+  const { token, setToken } = useContext(AppContext);
+
+  const logout = () => {
+    setToken(false);
+    localStorage.removeItem("token");
+  };
 
   return (
     <div className="mb-5 flex items-center justify-between border-b border-b-gray-400 py-4 text-sm">
@@ -66,10 +72,7 @@ const Navbar = () => {
                 >
                   My Appointments
                 </p>
-                <p
-                  onClick={() => setToken(false)}
-                  className="cursor-pointer hover:text-black"
-                >
+                <p onClick={logout} className="cursor-pointer hover:text-black">
                   Logout
                 </p>
               </div>

@@ -1,10 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [state, setState] = useState("Sign Up");
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,10 +47,16 @@ const Login = () => {
         }
       }
     } catch (error) {
-      toast.error(error.message)
-
+      toast.error(error.message);
     }
   };
+  
+  useEffect(() => {
+    if (token) {
+      // User is logged in
+      navigate("/"); // Navigate to home
+    }
+  }, [token]);
 
   return (
     <form className="flex min-h-[80vh] items-center" onSubmit={onSubmitHandler}>
@@ -94,7 +102,10 @@ const Login = () => {
           />
         </div>
 
-        <button type="submit" className="bg-primary w-full rounded-md py-2 text-base text-white">
+        <button
+          type="submit"
+          className="bg-primary w-full rounded-md py-2 text-base text-white"
+        >
           {state === "Sign Up" ? "Create Account" : "Login"}
         </button>
 
