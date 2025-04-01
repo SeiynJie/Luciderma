@@ -7,6 +7,28 @@ const MyAppointments = () => {
   const { backendUrl, token } = useContext(AppContext);
   const [appointments, setAppointments] = useState([]);
 
+  // Helper function to format the date
+  const formatDate = (dateStr) => {
+    const [day, month, year] = dateStr.split("_");
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    // Adjust for 1-indexed month in your string
+    const monthName = monthNames[parseInt(month, 10) - 1];
+    return `${day} ${monthName}, ${year}`;
+  };
+
   const getUserAppointments = async () => {
     try {
       // Call API
@@ -63,7 +85,7 @@ const MyAppointments = () => {
                   <span className="text-sm font-medium text-neutral-700">
                     Date & Time:{" "}
                   </span>
-                  25, July 2025 | 8:30 PM
+                  {formatDate(item.slotDate)} | {item.slotTime}{" "}
                 </p>
               </div>
 
