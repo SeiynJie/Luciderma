@@ -86,4 +86,19 @@ const loginUser = async (request, response) => {
   }
 };
 
-export { registerUser, loginUser };
+//* Get User profile data API
+const getProfile = async (request, response) => {
+  try {
+    // Get the user id, user will send the token
+    const { userId } = request.body;
+
+    // Find user 
+    const userData = await userModel.findById(userId).select("-password")
+
+    response.json({success: true, userData})
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+export { registerUser, loginUser, getProfile };
