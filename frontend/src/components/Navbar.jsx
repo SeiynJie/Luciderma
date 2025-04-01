@@ -8,7 +8,7 @@ const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   //   When no token = logged out
-  const { token, setToken } = useContext(AppContext);
+  const { token, setToken, userData } = useContext(AppContext);
 
   const logout = () => {
     setToken(false);
@@ -48,7 +48,7 @@ const Navbar = () => {
           <div className="group relative flex cursor-pointer items-center gap-2">
             <img
               className="w-8 rounded-full"
-              src={assets.profile_pic}
+              src={userData.image}
               alt="profile picture"
             />
             <img
