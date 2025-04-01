@@ -69,11 +69,32 @@ const Appointment = () => {
           minute: "2-digit",
         });
 
-        // add slot to array
-        timeSlots.push({
-          datetime: new Date(currentDate),
-          time: formattedTime,
-        });
+        //* Hide booked slots
+        let day = currentDate.getDate();
+        let month = currentDate.getMonth() + 1; //! Always add one to get the current month
+        let year = currentDate.getFullYear();
+
+        // Check if a date and time is booked
+        const slotDate = day + "_" + month + "_" + year;
+        const slotTime = formattedTime;
+
+        console.log(`${slotDate}| ${slotTime}`);
+
+        // Check doctor data
+        const isSlotAvailable =
+          docInfo.slots_booked[slotDate] &&
+          docInfo.slots_booked[slotDate].includes(slotTime)
+            ? false
+            : true;
+
+        // Only show slots that are available
+        if (isSlotAvailable) {
+          //* add slot to array
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime,
+          });
+        }
 
         // Increment time by 30 mins
         currentDate.setMinutes(currentDate.getMinutes() + 30);
