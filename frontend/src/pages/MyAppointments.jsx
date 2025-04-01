@@ -48,6 +48,31 @@ const MyAppointments = () => {
     }
   };
 
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      // Call API
+      const { data } = await axios.post(
+        backendUrl + "/api/user/cancel-appointment",
+        { appointmentId },
+        {
+          headers: { token },
+        },
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+
+        // Update user appointment data
+        getUserAppointments();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     if (token) {
       getUserAppointments();
@@ -93,12 +118,25 @@ const MyAppointments = () => {
               <div></div>
 
               <div className="flex flex-col justify-end gap-2">
-                <button className="hover:bg-primary rounded border border-gray-200 py-2 text-center text-sm text-stone-500 transition-all duration-300 hover:text-white sm:min-w-48">
-                  Pay Online
-                </button>
-                <button className="rounded border border-gray-200 py-2 text-center text-sm text-stone-500 transition-all duration-300 hover:bg-red-600 hover:text-white sm:min-w-48">
-                  Cancel Appointment
-                </button>
+                {!item.cancelled && (
+                  <button className="hover:bg-primary rounded border border-gray-200 py-2 text-center text-sm text-stone-500 transition-all duration-300 hover:text-white sm:min-w-48">
+                    Pay Online
+                  </button>
+                )}
+                {!item.cancelled && (
+                  <button
+                    onClick={() => cancelAppointment(item._id)}
+                    className="rounded border border-gray-200 py-2 text-center text-sm text-stone-500 transition-all duration-300 hover:bg-red-600 hover:text-white sm:min-w-48"
+                  >
+                    Cancel Appointment
+                  </button>
+                )}
+
+                {item.cancelled && (
+                  <button className="rounded border border-red-500 py-2 text-red-500 sm:min-w-48">
+                    Appointment Cancelled
+                  </button>
+                )}
               </div>
             </div>
           );
