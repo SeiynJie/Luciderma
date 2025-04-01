@@ -1,14 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import RelatedDoctors from "../components/RelatedDoctors";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Appointment = () => {
   // Get the doctor ID from the URL as params
   // Example: http://localhost:5173/appointment/doc2
   const { docId } = useParams();
-  const { doctors, currencySymbol } = useContext(AppContext);
+  const { doctors, currencySymbol, backendUrl, token, getDoctorsData } =
+    useContext(AppContext);
+
+  const navigate = useNavigate();
 
   // State to set the doctor info
   const [docInfo, setDocInfo] = useState(null);
@@ -75,6 +80,51 @@ const Appointment = () => {
       }
 
       setDocSlots((prev) => [...prev, timeSlots]);
+    }
+  };
+
+  const bookAppointment = async () => {
+    // Check if user is logged in
+    if (!token) {
+      toast.warn("Login to book appointment");
+      return navigate("/login");
+    }
+
+    try {
+      // Store the dates
+      const date = docSlots[slotIndex][0].datetime;
+
+      // Store date month and year in diff variables
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      let year = date.getFullYear();
+
+      const slotDate = day + "_" + month + "_" + year;
+
+      // Make API call to book appointment
+      const { data } = await axios.post(
+        backendUrl + "/api/user/book-appointment",
+        { docId, slotDate, slotTime },
+        {
+          headers: {
+            token,
+          },
+        },
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+
+        // Update the doctors data
+        getDoctorsData();
+        // Send users to myAppointments page
+        navigate("/my-appointments");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -178,7 +228,10 @@ const Appointment = () => {
               })}
           </div>
 
-          <button className="bg-primary my-6 rounded-full px-14 py-3 text-sm font-light text-white">
+          <button
+            onClick={bookAppointment}
+            className="bg-primary my-6 rounded-full px-14 py-3 text-sm font-light text-white"
+          >
             Book an Appointment
           </button>
         </div>
