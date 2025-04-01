@@ -227,6 +227,48 @@ const listAppointment = async (request, response) => {
     response.json({ success: false, message: error.message });
   }
 };
+
+//* Cancel Appointment API
+const cancelAppointment = async (request, response) => {
+  try {
+    // Get userID
+    const { userId, appointmentId } = request.body;
+
+    const appointmentData = await appointmentModel.findById(appointmentId);
+
+    // Verify appointment and user
+    if (!appointmentData.userId === userId) {
+      return response.json({ success: false, message: "Unauthorized Access" });
+    }
+
+    // Make cancelled property `true`
+    await appointmentModel.findByIdAndUpdate(appointmentId, {
+      cancelled: true,
+    });
+
+    //* Update doctor slots
+    // Get doctor ID from the appointment Data
+    const { docId, slotDate, slotTime } = appointmentData;
+
+    const doctorData = await doctorModel.findById(docId);
+
+    // Copy of slots booked to edit
+    let slots_booked = doctorData.slots_booked;
+
+    // Keep the slots that aren't matching the slot time of appointment to cancel
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (e) => e != slotTime
+    );
+
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+
+    response.json({ success: true, message: "Appointment Cancelled" });
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -234,4 +276,5 @@ export {
   updateProfile,
   bookAppointment,
   listAppointment,
+  cancelAppointment,
 };
