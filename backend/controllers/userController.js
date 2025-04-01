@@ -4,6 +4,7 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import { v2 as cloudinary } from "cloudinary";
 
 //* User Registration API
 const registerUser = async (request, response) => {
@@ -92,13 +93,57 @@ const getProfile = async (request, response) => {
     // Get the user id, user will send the token
     const { userId } = request.body;
 
-    // Find user 
-    const userData = await userModel.findById(userId).select("-password")
+    // Find user
+    const userData = await userModel.findById(userId).select("-password");
 
-    response.json({success: true, userData})
+    response.json({ success: true, userData });
   } catch (error) {
     console.log(error);
     response.json({ success: false, message: error.message });
   }
 };
-export { registerUser, loginUser, getProfile };
+
+//* Update User Profile API
+const updateProfile = async (request, response) => {
+  try {
+    // Get data from request
+    const { userId, name, phone, address, dob, gender } = request.body;
+
+    // Optional image update file
+    const imageFile = request.file;
+
+    // Validate
+    if (!name || !phone || !dob || !gender) {
+      return response.json({ success: false, message: "Data Missing" });
+    }
+
+    // Update database
+    await userModel.findByIdAndUpdate(userId, {
+      name,
+      phone,
+      address: JSON.parse(address),
+      dob,
+      gender,
+    });
+
+    // If image was sent as well
+    if (imageFile) {
+      // Upload to cloudinary
+      const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+        resource_type: "image",
+      });
+
+      // Image url returned by above upload
+      const imageURL = imageUpload.secure_url;
+
+      // Update database
+      await userModel.findByIdAndUpdate(userId, { image: imageURL });
+    }
+
+    response.json({ success: true, message: "Profile Updated" });
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+export { registerUser, loginUser, getProfile, updateProfile };
