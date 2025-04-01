@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const MyAppointments = () => {
-  const { backendUrl, token } = useContext(AppContext);
+  const { backendUrl, token, getDoctorsData } = useContext(AppContext);
   const [appointments, setAppointments] = useState([]);
 
   // Helper function to format the date
@@ -64,6 +64,7 @@ const MyAppointments = () => {
 
         // Update user appointment data
         getUserAppointments();
+        getDoctorsData();
       } else {
         toast.error(data.message);
       }
