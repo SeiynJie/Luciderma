@@ -1,8 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { AdminContext } from "../../context/AdminContext";
+import { AppContext } from "../../context/AppContext";
 
 const AllAppointments = () => {
   const { aToken, appointments, getAllAppointments } = useContext(AdminContext);
+  const { calculateAge, formatDate } = useContext(AppContext);
 
   // Get all appointments on load
   useEffect(() => {
@@ -33,12 +35,25 @@ const AllAppointments = () => {
               <p className="max-sm:hidden">{index + 1}</p>
               <div className="flex items-center gap-2">
                 <img
-                  className="w-8 rounded-full"
+                  className="w-8 rounded-full bg-gray-200"
                   src={item.userData.image}
                   alt="patient image"
                 />
                 <p>{item.userData.name}</p>
               </div>
+              <p className="max-sm:hidden">{calculateAge(item.userData.dob)}</p>
+              <p>
+                {formatDate(item.slotDate)}, {item.slotTime}
+              </p>
+              <div className="flex items-center gap-2">
+                <img
+                  className="w-8 rounded-full bg-gray-200"
+                  src={item.docData.image}
+                  alt="patient image"
+                />
+                <p>{item.docData.name}</p>
+              </div>
+              <p>{item.docData.fees}</p>
             </div>
           );
         })}
