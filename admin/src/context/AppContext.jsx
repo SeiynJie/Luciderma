@@ -35,9 +35,13 @@ const AppContextProvider = (props) => {
     const monthName = monthNames[parseInt(month, 10) - 1];
     return `${day} ${monthName}, ${year}`;
   };
+  // Global currency symbol
+  const currencySymbol = "$";
+
   const value = {
     calculateAge,
     formatDate,
+    currencySymbol,
   };
 
   return (

@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import { AdminContext } from "../../context/AdminContext";
 import { AppContext } from "../../context/AppContext";
+import { assets } from "../../assets/assets";
 
 const AllAppointments = () => {
   const { aToken, appointments, getAllAppointments } = useContext(AdminContext);
-  const { calculateAge, formatDate } = useContext(AppContext);
+  const { calculateAge, formatDate, currencySymbol } = useContext(AppContext);
 
   // Get all appointments on load
   useEffect(() => {
@@ -53,7 +54,16 @@ const AllAppointments = () => {
                 />
                 <p>{item.docData.name}</p>
               </div>
-              <p>{item.docData.fees}</p>
+              <p>{`${currencySymbol}${item.docData.fees}`}</p>
+              {item.cancelled ? (
+                <p className="text-red-400 text-xs font-medium" >Cancelled</p>
+              ) : (
+                <img
+                  className="w-10 cursor-pointer"
+                  src={assets.cancel_icon}
+                  alt="cancel icon"
+                />
+              )}
             </div>
           );
         })}
