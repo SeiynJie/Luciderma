@@ -78,8 +78,8 @@ const AddDoctor = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      return toast.error(error.message);
       console.log(error);
+      return toast.error(error.message);
     }
   };
 
