@@ -3,6 +3,7 @@ import bycrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
 import jwt from "jsonwebtoken";
+import appointmentModel from "../models/appointmentModel.js";
 
 // API for adding doctor
 const addDoctor = async (request, response) => {
@@ -134,11 +135,21 @@ const allDoctors = async (request, response) => {
     // Get doctors from mongo DB model but exclude the password
     const doctors = await doctorModel.find({}).select("-password");
     response.json({ success: true, doctors });
-
   } catch (error) {
     console.log(error);
     response.json({ success: false, message: error.message });
   }
 };
 
-export { addDoctor, loginAdmin, allDoctors };
+//* Get all appointments list API
+const appointmentsAdmin = async (request, response) => {
+  try {
+    // Get all appointments
+    const appointments = await appointmentModel.find({});
+    response.json({ success: true, appointments });
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+export { addDoctor, loginAdmin, allDoctors, appointmentsAdmin };
