@@ -4,11 +4,14 @@ import { AdminContext } from "../context/AdminContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { DoctorContext } from "../context/DoctorContext";
 
 const Login = () => {
   const [state, setState] = useState("Admin");
 
   const { setAToken, backendUrl } = useContext(AdminContext);
+  const { setDToken } = useContext(DoctorContext);
+
   const navigate = useNavigate();
 
   // Store email ID
@@ -36,12 +39,26 @@ const Login = () => {
           localStorage.setItem("aToken", data.token);
 
           setAToken(data.token);
-          navigate("/admin-dashboard")
+          navigate("/admin-dashboard");
         } else {
           toast.error(data.message);
         }
       } else {
         // Doctor login API
+        const { data } = await axios.post(backendUrl + "/api/doctor/login", {
+          email,
+          password,
+        });
+        if (data.success) {
+          // console.log(data.token)
+          // Also save to local storage
+          localStorage.setItem("dToken", data.token);
+
+          setDToken(data.token);
+          navigate("/");
+        } else {
+          toast.error(data.message);
+        }
       }
     } catch (error) {}
   };

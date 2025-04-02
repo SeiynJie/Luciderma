@@ -54,7 +54,7 @@ const loginDoctor = async (request, response) => {
 
     if (isMatch) {
       // Send token to user
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: doctor._id }, process.env.JWT_SECRET);
       response.json({ success: true, token });
     } else {
       response.json({ success: false, message: "Incorrect Password" });
