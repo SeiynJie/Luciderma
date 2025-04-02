@@ -3,45 +3,48 @@ import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [state, setState] = useState("Admin");
 
   const { setAToken, backendUrl } = useContext(AdminContext);
+  const navigate = useNavigate();
 
   // Store email ID
-  const [email, setEmail] = useState("")
-  
+  const [email, setEmail] = useState("");
+
   // Store password
-  const [password, setPassword] = useState("")
+  const [password, setPassword] = useState("");
 
   // Function for submitting form
   const onSubmitHandler = async (event) => {
-    event.preventDefault() // Won't reload webpage when form submitted
+    event.preventDefault(); // Won't reload webpage when form submitted
 
     try {
-        // API call
-        if (state === "Admin") {
-            // Admin Login API
-            const {data} = await axios.post(backendUrl + "/api/admin/login", {email, password})
+      // API call
+      if (state === "Admin") {
+        // Admin Login API
+        const { data } = await axios.post(backendUrl + "/api/admin/login", {
+          email,
+          password,
+        });
 
-            if (data.success) {
-                // console.log(data.token)
-                // Also save to local storage
-                localStorage.setItem("aToken", data.token)
-                
-                setAToken(data.token)
-            } else{
-                toast.error(data.message)
-            }
+        if (data.success) {
+          // console.log(data.token)
+          // Also save to local storage
+          localStorage.setItem("aToken", data.token);
+
+          setAToken(data.token);
+          navigate("/admin-dashboard")
         } else {
-            // Doctor login API
-
+          toast.error(data.message);
         }
-    } catch (error) {
-        
-    }
-  }
+      } else {
+        // Doctor login API
+      }
+    } catch (error) {}
+  };
 
   return (
     <form className="min-h-[80vh] flex items-center" onSubmit={onSubmitHandler}>
@@ -55,9 +58,9 @@ const Login = () => {
             className="border border-[#DADADA] rounded w-full p-2 mt-1"
             type="email"
             required
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             value={email}
-            />
+          />
         </div>
         <div className="w-full">
           <p>Password</p>
@@ -65,7 +68,7 @@ const Login = () => {
             className="border border-[#DADADA] rounded w-full p-2 mt-1"
             type="password"
             required
-            onChange={(e)=>setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
         </div>
