@@ -152,4 +152,46 @@ const appointmentsAdmin = async (request, response) => {
     response.json({ success: false, message: error.message });
   }
 };
-export { addDoctor, loginAdmin, allDoctors, appointmentsAdmin };
+
+//* Appointment Cancellation API (Admin Side)
+const appointmentCancel = async (request, response) => {
+  try {
+    const { appointmentId } = request.body;
+
+    const appointmentData = await appointmentModel.findById(appointmentId);
+
+    // Make cancelled property `true`
+    await appointmentModel.findByIdAndUpdate(appointmentId, {
+      cancelled: true,
+    });
+
+    //* Update doctor slots
+    // Get doctor ID from the appointment Data
+    const { docId, slotDate, slotTime } = appointmentData;
+
+    const doctorData = await doctorModel.findById(docId);
+
+    // Copy of slots booked to edit
+    let slots_booked = doctorData.slots_booked;
+
+    // Keep the slots that aren't matching the slot time of appointment to cancel
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (e) => e != slotTime
+    );
+
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked });
+
+    response.json({ success: true, message: "Appointment Cancelled" });
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+
+export {
+  addDoctor,
+  loginAdmin,
+  allDoctors,
+  appointmentsAdmin,
+  appointmentCancel,
+};
