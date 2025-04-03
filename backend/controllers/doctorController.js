@@ -186,8 +186,7 @@ const doctorProfile = async (request, response) => {
 const updateDoctorProfile = async (request, response) => {
   try {
     // Get data from request
-    const { docId} = request.body;
-    const { fees, address, available } = request.body.updateData;
+    const { docId, fees, address, available} = request.body;
 
     if (!docId || !fees || !address || !available) {
       return response.json({

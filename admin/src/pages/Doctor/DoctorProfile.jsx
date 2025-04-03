@@ -26,7 +26,7 @@ const DoctorProfile = () => {
       console.log(profileData);
       const { data } = await axios.post(
         backendUrl + "/api/doctor/update-profile",
-        { updateData },
+        updateData,
         { headers: { dToken } }
       );
 
