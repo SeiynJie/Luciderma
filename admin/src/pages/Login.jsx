@@ -55,7 +55,7 @@ const Login = () => {
           localStorage.setItem("dToken", data.token);
 
           setDToken(data.token);
-          navigate("/");
+          navigate("/doctor-dashboard");
         } else {
           toast.error(data.message);
         }
