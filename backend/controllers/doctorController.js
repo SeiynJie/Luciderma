@@ -127,6 +127,45 @@ const appointmentCancel = async (request, response) => {
     response.json({ success: false, message: error });
   }
 };
+
+//* Get doc dashboard data API
+const doctorDashboard = async (request, response) => {
+  try {
+    // Get doc Id and appointment ID
+    const { docId } = request.body;
+
+    const appointments = await appointmentModel.find({ docId });
+
+    let earnings = 0;
+    appointments.map((item, index) => {
+      if (item.isCompleted) {
+        // Calculate earnings
+        earnings += item.amount;
+      }
+    });
+
+    let patients = [];
+    appointments.map((item, index) => {
+      if (!patients.includes(item.userId)) {
+        // Only get the data NOT already in the patients array
+        patients.push(item.userId);
+      }
+    });
+
+    const dashData = {
+      earnings,
+      appointments: appointments.length,
+      patients: patients.length,
+      latestAppointments: appointments.reverse().slice(0, 5),
+    };
+
+    response.json({ success: true, dashData });
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error });
+  }
+};
+
 export {
   changeAvailability,
   doctorList,
@@ -134,4 +173,5 @@ export {
   appointmentsDoctor,
   appointmentComplete,
   appointmentCancel,
+  doctorDashboard,
 };
