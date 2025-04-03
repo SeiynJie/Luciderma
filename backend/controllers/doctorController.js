@@ -166,6 +166,59 @@ const doctorDashboard = async (request, response) => {
   }
 };
 
+//* Get doctor profile data API
+const doctorProfile = async (request, response) => {
+  try {
+    // Get the user id, user will send the token
+    const { docId } = request.body;
+
+    // Find user
+    const profileData = await doctorModel.findById(docId).select("-password");
+
+    response.json({ success: true, profileData });
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+
+//* Update doctor Profile API
+const updateDoctorProfile = async (request, response) => {
+  try {
+    // Get data from request
+    const { docId, fees, address, available } = request.body;
+
+    // Optional image update file
+    const imageFile = request.file;
+
+    // Update database
+    await doctorModel.findByIdAndUpdate(docId, {
+      fees,
+      address,
+      available,
+    });
+
+    // If image was sent as well
+    if (imageFile) {
+      // Upload to cloudinary
+      const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+        resource_type: "image",
+      });
+
+      // Image url returned by above upload
+      const imageURL = imageUpload.secure_url;
+
+      // Update database
+      await doctorModel.findByIdAndUpdate(docId, { image: imageURL });
+    }
+
+    response.json({ success: true, message: "Profile Updated" });
+  } catch (error) {
+    console.log(error);
+    response.json({ success: false, message: error.message });
+  }
+};
+
 export {
   changeAvailability,
   doctorList,
@@ -174,4 +227,6 @@ export {
   appointmentComplete,
   appointmentCancel,
   doctorDashboard,
+  doctorProfile,
+  updateDoctorProfile,
 };
