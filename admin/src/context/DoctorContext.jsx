@@ -34,52 +34,6 @@ const DoctorContextProvider = (props) => {
     }
   };
 
-  //* Complete Appointments
-  const completeAppointment = async (appointmentId) => {
-    try {
-      const { data } = await axios.post(
-        backendUrl + "/api/doctor/complete-appointment",
-        { appointmentId },
-        {
-          headers: { dToken },
-        }
-      );
-
-      if (data.success) {
-        toast.success(data.message);
-        getAppointments();
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-    }
-  };
-
-  //* Cancel Appointments
-  const cancelAppointment = async (appointmentId) => {
-    try {
-      const { data } = await axios.post(
-        backendUrl + "/api/doctor/cancel-appointment",
-        { appointmentId },
-        {
-          headers: { dToken },
-        }
-      );
-
-      if (data.success) {
-        toast.success(data.message);
-        getAppointments();
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-    }
-  };
-
   //* Get doctor dashboard data
   const [dashData, setDashData] = useState(false);
   const getDocDashboard = async () => {
@@ -94,7 +48,60 @@ const DoctorContextProvider = (props) => {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error); 
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  //* Complete Appointments
+  const completeAppointment = async (appointmentId, retrieveDocDash) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/doctor/complete-appointment",
+        { appointmentId },
+        {
+          headers: { dToken },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        getAppointments();
+
+        if (retrieveDocDash) {
+          getDocDashboard();
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  //* Cancel Appointments
+  const cancelAppointment = async (appointmentId, retrieveDocDash) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/doctor/cancel-appointment",
+        { appointmentId },
+        {
+          headers: { dToken },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        getAppointments();
+        if (retrieveDocDash) {
+          getDocDashboard();
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
       toast.error(error.message);
     }
   };

@@ -94,13 +94,13 @@ const DoctorDashboard = () => {
                   ) : (
                     <div className="flex items-center">
                       <img
-                        onClick={() => cancelAppointment(item._id)}
+                        onClick={() => cancelAppointment(item._id, true)}
                         className="w-10 cursor-pointer"
                         src={assets.cancel_icon}
                         alt=""
                       />
                       <img
-                        onClick={() => completeAppointment(item._id)}
+                        onClick={() => completeAppointment(item._id, true)}
                         className="w-10 cursor-pointer"
                         src={assets.tick_icon}
                         alt=""
