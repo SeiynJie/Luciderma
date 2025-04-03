@@ -32,7 +32,7 @@ const DoctorAppointment = () => {
           <p>Action</p>
         </div>
 
-        {appointments.reverse().map((item, index) => {
+        {appointments.map((item, index) => {
           return (
             <div
               key={index}
