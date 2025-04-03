@@ -47,6 +47,7 @@ const AddDoctor = () => {
       // formData.forEach((value, key) => {
       //   console.log(`${key} : ${value}`)
       // })
+      toast.info("Adding Doctor");
 
       // Save to DB
       const { data } = await axios.post(
