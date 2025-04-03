@@ -106,6 +106,28 @@ const DoctorContextProvider = (props) => {
     }
   };
 
+  //* Get doc profile data
+  const [profileData, setProfileData] = useState(false);
+
+  const getProfileData = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/doctor/profile", {
+        headers: { dToken },
+      });
+
+      if (data.success) {
+        setProfileData(data.profileData);
+        console.log(data.profileData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  // toast.info("Updating Profile Data")
   const value = {
     dToken,
     setDToken,
@@ -118,6 +140,9 @@ const DoctorContextProvider = (props) => {
     dashData,
     setDashData,
     getDocDashboard,
+    profileData,
+    setProfileData,
+    getProfileData,
   };
 
   return (
