@@ -1,14 +1,48 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DoctorContext } from "../../context/DoctorContext";
 import { AppContext } from "../../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const DoctorProfile = () => {
-  const { dToken, profileData, setProfileData, getProfileData } =
+  const { dToken, profileData, setProfileData, getProfileData, backendUrl } =
     useContext(DoctorContext);
 
-  const { formatDate, currencySymbol, backendUrl } = useContext(AppContext);
+  const { currencySymbol } = useContext(AppContext);
 
   const [isEdit, setIsEdit] = useState(false);
+
+  const updateProfile = async (params) => {
+    try {
+      const updateData = {
+        fees: profileData.fees,
+        address: profileData.address,
+        available: profileData.available,
+      };
+
+      toast.info("Updating Profile");
+
+      // API call
+      console.log(profileData);
+      const { data } = await axios.post(
+        backendUrl + "/api/doctor/update-profile",
+        { updateData },
+        { headers: { dToken } }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        setIsEdit(false);
+        getProfileData(); // Update profile data
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (dToken) {
       getProfileData();
@@ -63,7 +97,7 @@ const DoctorProfile = () => {
                     onChange={(e) =>
                       setProfileData((prev) => ({
                         ...prev,
-                        fees: e.target.value,
+                        fees: Number(e.target.value),
                       }))
                     }
                   />
@@ -131,7 +165,7 @@ const DoctorProfile = () => {
 
             {isEdit ? (
               <button
-                onClick={() => setIsEdit(false)}
+                onClick={() => updateProfile()}
                 className="px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all"
               >
                 Save

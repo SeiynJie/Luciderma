@@ -186,7 +186,15 @@ const doctorProfile = async (request, response) => {
 const updateDoctorProfile = async (request, response) => {
   try {
     // Get data from request
-    const { docId, fees, address, available } = request.body;
+    const { docId} = request.body;
+    const { fees, address, available } = request.body.updateData;
+
+    if (!docId || !fees || !address || !available) {
+      return response.json({
+        success: false,
+        message: "Some fields are missing",
+      });
+    }
 
     // Optional image update file
     const imageFile = request.file;
