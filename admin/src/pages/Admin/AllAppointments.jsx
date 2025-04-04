@@ -28,7 +28,7 @@ const AllAppointments = () => {
           <p>Action</p>
         </div>
 
-        {appointments.map((item, index) => {
+        {appointments.reverse().map((item, index) => {
           return (
             <div
               key={index}
@@ -58,6 +58,8 @@ const AllAppointments = () => {
               <p>{`${currencySymbol}${item.docData.fees}`}</p>
               {item.cancelled ? (
                 <p className="text-red-400 text-xs font-medium">Cancelled</p>
+              ) : item.isCompleted ? (
+                <p className="text-green-500 text-xs font-medium">Completed</p>
               ) : (
                 <img
                   onClick={() => cancelAppointment(item._id)}
