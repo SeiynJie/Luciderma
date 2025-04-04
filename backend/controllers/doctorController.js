@@ -188,7 +188,7 @@ const updateDoctorProfile = async (request, response) => {
     // Get data from request
     const { docId, fees, address, available} = request.body;
 
-    if (!docId || !fees || !address || !available) {
+    if (!docId || !fees || !address) {
       return response.json({
         success: false,
         message: "Some fields are missing",
