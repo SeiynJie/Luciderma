@@ -91,7 +91,7 @@ const Doctors = () => {
           </p>
         </div>
 
-        <div className="grid w-full auto-cols-auto md:grid-cols-3 lg:grid-cols-5 gap-4 gap-y-6">
+        <div className="grid w-full auto-cols-auto gap-4 gap-y-6 md:grid-cols-3 lg:grid-cols-5">
           {filterDoc.map((item, index) => {
             return (
               <div
@@ -101,9 +101,13 @@ const Doctors = () => {
               >
                 <img className="bg-blue-50" src={item.image} alt="" />
                 <div className="p-4">
-                  <div className="flex items-center gap-2 text-center text-sm text-green-500">
-                    <p className="size-2 rounded-full bg-green-500"></p>
-                    <p>Available</p>
+                  <div
+                    className={`flex items-center gap-2 text-center text-sm ${item.available ? "text-green-500" : "text-gray-500"} `}
+                  >
+                    <p
+                      className={`size-2 rounded-full ${item.available ? "bg-green-500" : "bg-gray-500"} `}
+                    ></p>
+                    <p>{item.available ? "Available" : "Not Available"}</p>
                   </div>
                   <p className="text-lg font-medium text-gray-900">
                     {item.name}

@@ -13,7 +13,7 @@ const TopDoctors = () => {
         Simply browse through our extensive list of trusted doctors.
       </p>
 
-      <div className="grid w-full auto-cols-auto md:grid-cols-3 lg:grid-cols-5 gap-4 gap-y-6 px-3 pt-5 sm:px-0">
+      <div className="grid w-full auto-cols-auto gap-4 gap-y-6 px-3 pt-5 sm:px-0 md:grid-cols-3 lg:grid-cols-5">
         {doctors.slice(0, 10).map((item, index) => {
           return (
             <div
@@ -26,9 +26,13 @@ const TopDoctors = () => {
             >
               <img className="bg-blue-50" src={item.image} alt="" />
               <div className="p-4">
-                <div className="flex items-center gap-2 text-center text-sm text-green-500">
-                  <p className="size-2 rounded-full bg-green-500"></p>
-                  <p>Available</p>
+                <div
+                  className={`flex items-center gap-2 text-center text-sm ${item.available ? "text-green-500" : "text-gray-500"} `}
+                >
+                  <p
+                    className={`size-2 rounded-full ${item.available ? "bg-green-500" : "bg-gray-500"} `}
+                  ></p>
+                  <p>{item.available ? "Available" : "Not Available"}</p>
                 </div>
                 <p className="text-lg font-medium text-gray-900">{item.name}</p>
                 <p className="text-sm text-gray-600">{item.speciality}</p>
