@@ -19,7 +19,7 @@ const RelatedDoctors = ({ docId, speciality }) => {
   }, [doctors, speciality, docId]);
   return (
     <div className="my-16 flex flex-col items-center gap-4 text-gray-900 md:mx-10">
-      <h1 className="text-3xl font-medium">Top Doctors</h1>
+      <h1 className="text-3xl font-medium">Related Doctors</h1>
       <p className="text-center text-sm sm:w-1/3">
         Simply browse through our extensive list of trusted doctors.
       </p>
